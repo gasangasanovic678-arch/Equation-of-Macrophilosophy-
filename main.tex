@@ -1,0 +1,412 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+
+\newtheorem{definition}{Definition}
+\newtheorem{axiom}{Axiom}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{remark}{Remark}
+
+\newcommand{\PhiPlus}{\Phi^{+}}
+\newcommand{\card}[1]{\left|#1\right|}
+\newcommand{\Real}{\mathbb{R}}
+
+\title{A Mathematical Specification of the Macro-Philosophical Index $\Phi^{+}$}
+\author{Bagirov Hasan}
+\date{October 2026}
+
+\begin{document}
+\maketitle
+
+\section{Introduction and scope}
+
+This document gives a mathematical specification of the index $\PhiPlus$, the
+Macro-Philosophical Index. The specification is purely theoretical. It fixes
+scales, the aggregation formula, and a graph-theoretic construction for graded
+logical coherence. It contains no empirical application, no calibration, and no
+derivation of the numerical parameters: weights and the filter exponent are
+declared parameters of a family of indices.
+
+Let $\mathcal{T}$ be a class of formalized theories. For $T\in\mathcal{T}$ we
+write $s_X(T)\in[0,1]$ for the score of $T$ on variable $X$, where
+\[
+X\in\{O,M,F,N,R\}.
+\]
+The value $0$ means complete absence of the corresponding property, and $1$
+means maximal expression.
+
+\section{Axioms}
+
+\begin{axiom}[Continuous scale]
+Every variable is measured on the continuous interval $[0,1]$:
+\[
+s_X(T)\in[0,1]\qquad\text{for all }X\in\{O,M,F,N,R\}.
+\]
+\end{axiom}
+
+\begin{axiom}[No compensation]
+\label{ax:no-comp}
+For every $X\in\{O,M,F,N,R\}$ and every assignment of the remaining scores,
+\[
+s_X(T)=0\ \Longrightarrow\ \PhiPlus(T)=0.
+\]
+In particular, a zero on one variable cannot be offset by any values of the
+other variables.
+\end{axiom}
+
+\begin{axiom}[Coherence filter]
+\label{ax:filter}
+Logical coherence $N$ enters multiplicatively with a positive exponent: there
+exist $\lambda>0$ and a function $g\colon[0,1]^{4}\to[0,\infty)$ such that
+\[
+\PhiPlus(T)=g\bigl(s_O(T),s_M(T),s_F(T),s_R(T)\bigr)\,\bigl(s_N(T)\bigr)^{\lambda},
+\]
+where $g$ is nondecreasing in each argument and $g(1,1,1,1)=1$.
+\end{axiom}
+
+\begin{remark}
+Axiom~\ref{ax:no-comp} is the precise content of the informal requirement that
+the index not be a linear weighted sum. A linear sum violates it: with
+$\sum_i \tilde w_i=1$ and $\tilde w_i>0$, one has
+$\sum_i\tilde w_i s_i=1-\tilde w_k$ when $s_k=0$ and all other scores equal $1$.
+\end{remark}
+
+\section{Scales and measurement model}
+
+\begin{definition}[Formalized theory]
+A formalized theory $T$ consists of a finite set $V(T)$ of atomic theses and a
+consequence relation $\vdash_T$.
+\end{definition}
+
+\begin{definition}[Measurement model]
+For $X\in\{O,M,F,R\}$ let $C_X$ be a finite nonempty set of criteria and let
+$\alpha_c>0$ $(c\in C_X)$ be criterion weights. A \emph{measurement model} for
+$T$ is a family of degrees
+\[
+x_c^{X}(T)\in[0,1]\qquad(c\in C_X,\ X\in\{O,M,F,R\}),
+\]
+where $x_c^{X}(T)$ expresses how strongly $T$ satisfies criterion $c$ for
+variable $X$. The specification fixes the sets $C_X$ and the weights
+$\alpha_c$; the degrees $x_c^{X}(T)$ are supplied by the measurement model.
+\end{definition}
+
+\begin{definition}[Criterion-based variable score]
+For $X\in\{O,M,F,R\}$,
+\[
+s_X(T)=\frac{\sum_{c\in C_X}\alpha_c\,x_c^{X}(T)}{\sum_{c\in C_X}\alpha_c}.
+\]
+Unless otherwise stated, $\alpha_c=1$ for all criteria, so that
+\[
+s_X(T)=\frac{1}{\card{C_X}}\sum_{c\in C_X}x_c^{X}(T).
+\]
+\end{definition}
+
+\begin{definition}[Ontological Clarity $O$]
+$C_O=\{O_1,O_2,O_3,O_4\}$, where
+\begin{itemize}
+\item $O_1$: $T$ explicitly fixes its existential commitments;
+\item $O_2$: $T$ specifies the domain of quantification;
+\item $O_3$: $T$ specifies identity or individuation conditions for primitive entities;
+\item $O_4$: $T$ distinguishes existence claims from mere predication or modal status.
+\end{itemize}
+Then $s_O(T)=\frac14\sum_{j=1}^{4}x_{O_j}^{O}(T)$.
+\end{definition}
+
+\begin{definition}[Modal Differentiation $M$]
+$C_M=\{M_1,M_2,M_3,M_4\}$, where
+\begin{itemize}
+\item $M_1$: $T$ distinguishes eternal from temporal entities or truths;
+\item $M_2$: $T$ distinguishes immutable from mutable entities or truths;
+\item $M_3$: $T$ distinguishes aseitic from dependent entities;
+\item $M_4$: $T$ assigns modal statuses (necessity, contingency, possibility) to fundamental claims.
+\end{itemize}
+Then $s_M(T)=\frac14\sum_{j=1}^{4}x_{M_j}^{M}(T)$.
+\end{definition}
+
+\begin{definition}[Fundamentality $F$]
+$C_F=\{F_1,F_2,F_3,F_4\}$, where
+\begin{itemize}
+\item $F_1$: $T$ identifies a fundamental level or fundamental entities;
+\item $F_2$: $T$ specifies a grounding or dependence direction;
+\item $F_3$: $T$ distinguishes non-fundamental from fundamental entities;
+\item $F_4$: $T$ provides an explicit fundamentality predicate or ordering.
+\end{itemize}
+Then $s_F(T)=\frac14\sum_{j=1}^{4}x_{F_j}^{F}(T)$.
+\end{definition}
+
+\begin{definition}[Relational Completeness $R$]
+$C_R=\{R_1,R_2,R_3,R_4\}$, where
+\begin{itemize}
+\item $R_1$: $T$ specifies primitive relations;
+\item $R_2$: $T$ specifies domains and ranges of relations;
+\item $R_3$: $T$ specifies composition or closure rules for relations;
+\item $R_4$: $T$ states completeness of its relational inventory.
+\end{itemize}
+Then $s_R(T)=\frac14\sum_{j=1}^{4}x_{R_j}^{R}(T)$.
+\end{definition}
+
+The coherence score $s_N(T)$ is defined in Section~\ref{sec:coherence}.
+
+\section{Aggregation}
+
+\begin{definition}[Weight budget and exponents]
+The nominal weights are
+\[
+w_O=0.30,\qquad w_M=0.20,\qquad w_F=0.20,\qquad w_R=0.15,\qquad w_N=0.15,
+\]
+with $\sum_{X}w_X=1$. Set
+\[
+W=w_O+w_M+w_F+w_R=1-w_N=0.85,
+\qquad
+\widetilde w_i=\frac{w_i}{W}\quad(i\in\{O,M,F,R\}),
+\]
+so that $\widetilde w_O+\widetilde w_M+\widetilde w_F+\widetilde w_R=1$. The
+filter exponent $\lambda>0$ is an independent parameter; the default value is
+$\lambda=0.5$.
+\end{definition}
+
+\begin{definition}[Macro-Philosophical Index $\PhiPlus$]
+For $T\in\mathcal{T}$ and $\lambda>0$,
+\[
+\PhiPlus(T)
+=
+\Biggl(\prod_{i\in\{O,M,F,R\}} s_i(T)^{w_i}\Biggr)
+\bigl(s_N(T)\bigr)^{\lambda}
+=
+\Biggl(\prod_{i\in\{O,M,F,R\}} s_i(T)^{\widetilde w_i}\Biggr)^{W}
+\bigl(s_N(T)\bigr)^{\lambda},
+\]
+with the convention $0^{a}=0$ for $a>0$.
+\end{definition}
+
+\begin{remark}[Status of $w_N$]
+\label{rem:wn}
+The value of $\PhiPlus$ depends only on the parameters
+$(w_O,w_M,w_F,w_R,\lambda)$. The nominal share $w_N$ enters no formula except
+through the accounting identity $W=1-w_N$. The budget-consistent choice
+$\lambda=w_N$ is available, but is not adopted here, so that filter intensity
+can be varied independently of the budget.
+\end{remark}
+
+\begin{remark}[Not a weighted mean]
+Since $W+\lambda=1.35\neq 1$ for the default parameters, $\PhiPlus$ is not a
+weighted geometric mean of the five scores; its maximum $1$ is attained only at
+the corner $(1,1,1,1,1)$, and it penalizes deficiency more strongly than a mean
+with the same weights would.
+\end{remark}
+
+\begin{proposition}[Admissibility]
+\label{prop:admissible}
+The construction of $\PhiPlus$ satisfies Axioms~1--3.
+\end{proposition}
+
+\begin{proof}
+Axiom~1 holds by definition of the scales and of $s_N\in[0,1]$
+(Section~\ref{sec:coherence}). For Axiom~\ref{ax:no-comp}: if $s_X=0$ with
+$X\in\{O,M,F,R\}$ then the corresponding factor $s_X^{w_X}$ vanishes, and since
+$w_X>0$ the product vanishes; if $s_N=0$ then $s_N^{\lambda}=0$ because
+$\lambda>0$. Axiom~\ref{ax:filter} holds with $g$ the weighted geometric mean of
+$s_O,s_M,s_F,s_R$, which is nondecreasing and equals $1$ at $(1,1,1,1)$.
+\end{proof}
+
+\section{Coherence}
+\label{sec:coherence}
+
+\begin{definition}[Dependency graph]
+For a formalized theory $T$, let $D(T)=(V,E)$ be the directed dependency graph
+with vertex set $V=V(T)$ and edge set $E\subseteq V\times V$. An edge $(v,u)\in E$
+means that thesis $v$ presupposes or depends on thesis $u$ for its justification.
+\end{definition}
+
+\begin{definition}[Feedback vertex set]
+A set $H\subseteq V$ is a feedback vertex set of $D(T)$ if the induced subgraph
+$D(T)[V\setminus H]$ is acyclic. Define
+\[
+h^{*}(T)=\min\bigl\{\card{H}: H\subseteq V,\ D(T)[V\setminus H]\text{ is acyclic}\bigr\},
+\]
+and let $H^{*}(T)$ be any minimizer. Equivalently, $H^{*}(T)$ is a minimum
+hitting set of the family of directed cycles of $D(T)$.
+\end{definition}
+
+\begin{definition}[Graded coherence $s_N$]
+Let $\chi(T)\in\{0,1\}$ be the consistency indicator,
+\[
+\chi(T)=
+\begin{cases}
+0, & \text{if } T\vdash_T\bot,\\
+1, & \text{otherwise}.
+\end{cases}
+\]
+Define
+\[
+s_N(T)=\chi(T)\left(1-\frac{h^{*}(T)}{\card{V(T)}}\right),
+\]
+with the convention $h^{*}(T)/\card{V(T)}:=0$ when $V(T)=\emptyset$.
+\end{definition}
+
+\begin{remark}[Two failure modes]
+The score $s_N$ is a product of two components: the consistency indicator
+$\chi$, which detects derivability of $\bot$ through $\vdash_T$, and the
+\emph{acyclicity degree} $a(T)=1-h^{*}(T)/\card{V(T)}$, which penalizes circular
+justification. Both must hold for $s_N$ to be positive. Consistency and
+acyclicity are logically independent: a consistent theory may have circular
+dependencies, and an inconsistent one need not.
+\end{remark}
+
+\begin{remark}[Size dependence]
+\label{rem:size}
+For fixed $h^{*}$, the acyclicity degree increases with $\card{V}$: a single
+$3$-cycle in a graph with $100$ vertices gives $a=0.97$, whereas a loop on a
+one-vertex graph gives $a=0$. The measure is therefore sensitive to theory size,
+not only to the share of cyclic structure. This is accepted in the present
+version; calibration will decide whether a size-corrected variant is preferable.
+\end{remark}
+
+\begin{definition}[Exact algorithm]
+The minimum feedback vertex set is computed by the integer linear program
+\[
+\begin{aligned}
+\min\quad & \sum_{v\in V} y_v\\
+\text{subject to}\quad & \sum_{v\in C} y_v\ge 1 && \text{for every directed cycle } C \text{ of } D(T),\\
+& y_v\in\{0,1\} && \text{for every } v\in V.
+\end{aligned}
+\]
+If $y^{*}$ is optimal, then $H^{*}(T)=\{v\in V: y_v^{*}=1\}$ and
+$h^{*}(T)=\sum_v y_v^{*}$.
+\end{definition}
+
+\begin{remark}[Complexity and implementation]
+Feedback vertex set is NP-hard in general, so exact computation is exponential
+in the worst case. In practice the cycle family can be generated lazily: solve
+the relaxation on a current subset of cycles, find a violated cycle in a
+strongly connected component of the resulting subgraph, add it as a cutting
+plane, and iterate until optimality. The construction is exact; only its cost
+depends on $\card{V}$.
+\end{remark}
+
+\section{Properties}
+
+\begin{proposition}[Zero set]
+\label{prop:zero}
+$\PhiPlus(T)=0$ if and only if $s_N(T)=0$ or $s_i(T)=0$ for some
+$i\in\{O,M,F,R\}$.
+\end{proposition}
+
+\begin{proof}
+All factors are nonnegative and all exponents are positive. A product of
+nonnegative reals with positive exponents vanishes exactly when one of its
+factors vanishes; conversely, if all five scores are positive then all factors
+are positive.
+\end{proof}
+
+\begin{proposition}[Monotonicity, bounds, continuity]
+\label{prop:mono}
+$\PhiPlus$ is continuous on $[0,1]^{5}$, takes values in $[0,1]$, equals $1$
+only at $(1,1,1,1,1)$, and is nondecreasing in each argument, strictly so
+whenever $\PhiPlus>0$.
+\end{proposition}
+
+\begin{proof}
+Continuity: $x\mapsto x^{a}$ is continuous on $[0,1]$ for $a>0$ with $0^{a}=0$,
+and a finite product of continuous functions is continuous. Bounds: each factor
+lies in $[0,1]$, hence so does the product; the product equals $1$ only if every
+factor equals $1$. Monotonicity: for $i\in\{O,M,F,R\}$ and $s_i>0$,
+\[
+\frac{\partial\PhiPlus}{\partial s_i}=\frac{w_i}{s_i}\,\PhiPlus\ge 0,
+\]
+with equality only when $\PhiPlus=0$; for $N$,
+$\partial\PhiPlus/\partial s_N=(\lambda/s_N)\PhiPlus\ge 0$.
+\end{proof}
+
+\begin{proposition}[Anti-compensation]
+\label{prop:anti}
+Let $P(T)=\prod_{i\in\{O,M,F,R\}}s_i(T)^{w_i}$ with $w_i>0$. If $s_k(T)\to 0$
+for some $k$, then $P(T)\to 0$ regardless of the other factors. Hence no finite
+increase in the other variables can compensate a sufficiently low value of
+$s_k$.
+\end{proposition}
+
+\begin{proof}
+For $k\in\{O,M,F,R\}$,
+\[
+P(T)=s_k(T)^{w_k}\prod_{i\neq k}s_i(T)^{w_i}\le s_k(T)^{w_k},
+\]
+since $s_i(T)\le 1$ and $w_i>0$. If $s_k(T)\to 0$ then $s_k(T)^{w_k}\to 0$,
+hence $P(T)\to 0$. The same bound holds for the full index, because
+$s_N^{\lambda}\le 1$ when $s_N\le 1$.
+\end{proof}
+
+\begin{corollary}[Threshold dominance]
+For every $\varepsilon>0$ and every $k\in\{O,M,F,R\}$,
+\[
+s_k(T)<\varepsilon^{1/w_k}\ \Longrightarrow\ \PhiPlus(T)<\varepsilon,
+\]
+independently of the values of the other four scores.
+\end{corollary}
+
+\begin{proof}
+Immediate from $\PhiPlus(T)\le s_k(T)^{w_k}$, established in the proof of
+Proposition~\ref{prop:anti}.
+\end{proof}
+
+\section{Status of operationalization}
+\label{sec:status}
+
+The specification operates on four distinct levels, which should not be
+conflated.
+
+\begin{enumerate}
+\item \textbf{Formal structure} (complete). Carriers, scales, the aggregation
+operation, the zero set, monotonicity, and the coherence algorithm are fully
+determined: given a vector of degrees, every quantity is computable.
+\item \textbf{Indicator specification} (complete at the level of content). The
+sets $C_O,C_M,C_F,C_R$ enumerate what is to be assessed. The criteria are
+ostensive: they name properties, not decision procedures.
+\item \textbf{Measurement protocol} (deliberately absent). Coding rules, anchors
+for the values $0$ and $1$, aggregation of multiple coders, and reliability
+requirements are not part of this document. The degrees $x_c^{X}(T)$ are
+primitives of the measurement model.
+\item \textbf{Calibration} (deliberately absent). The weights
+$(w_O,w_M,w_F,w_R)$, the filter exponent $\lambda$, and the choice of
+size correction in $s_N$ are free parameters of a family of indices. No
+empirical derivation is claimed.
+\end{enumerate}
+
+Consequently the document specifies a \emph{family} of indices, parametrized by
+a measurement model and by $(\tilde w,\lambda)$. This is intentional: the
+theoretical version fixes the architecture and leaves measurement and
+calibration to a later stage.
+
+\section{Conclusion}
+
+We have specified the index
+\[
+\PhiPlus(T)
+=
+\Biggl(\prod_{i\in\{O,M,F,R\}} s_i(T)^{w_i}\Biggr)
+\bigl(s_N(T)\bigr)^{\lambda},
+\qquad
+\lambda=0.5,
+\]
+with core weights
+\[
+w_O=0.30,\quad w_M=0.20,\quad w_F=0.20,\quad w_R=0.15,
+\]
+nominal share $w_N=0.15$ (recorded for accounting only, see
+Remark~\ref{rem:wn}), and $W=0.85$.
+
+The variables $O,M,F,R$ are graded on $[0,1]$ by criterion-based scores. The
+coherence variable $N$ is graded as the product of a consistency indicator and
+an acyclicity degree derived from the minimum feedback vertex set of the
+dependency graph; logical contradiction forces $s_N=0$. The weighted geometric
+core satisfies the no-compensation axiom in the precise form of
+Axiom~\ref{ax:no-comp}, and the multiplicative filter with $\lambda>0$ makes
+$\PhiPlus$ vanish on every theory with $s_N=0$. The zero set, monotonicity,
+bounds, continuity, and the anti-compensation bound are established in
+Section~6. The construction is purely theoretical and contains no empirical
+calibration.
+
+\end{document}
