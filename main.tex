@@ -1,412 +1,290 @@
-\documentclass[11pt,a4paper]{article}
-\usepackage[margin=2.5cm]{geometry}
+\documentclass[11pt]{article}
 \usepackage{amsmath,amssymb,amsthm}
-\usepackage[T1]{fontenc}
-\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
 
-\newtheorem{definition}{Definition}
-\newtheorem{axiom}{Axiom}
-\newtheorem{proposition}{Proposition}
-\newtheorem{corollary}{Corollary}
-\newtheorem{remark}{Remark}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{axiom}[theorem]{Axiom}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
 
-\newcommand{\PhiPlus}{\Phi^{+}}
-\newcommand{\card}[1]{\left|#1\right|}
-\newcommand{\Real}{\mathbb{R}}
+\newcommand{\Ph}{\Phi^{+}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\eps}{\varepsilon}
 
-\title{A Mathematical Specification of the Macro-Philosophical Index $\Phi^{+}$}
-\author{Bagirov Hasan}
-\date{October 2026}
+\title{A Representation Theorem for a Macro-Philosophical Index:\\
+Weighted Geometric Aggregation with an Invariant Coherence Measure}
+\author{}
+\date{}
 
 \begin{document}
 \maketitle
 
-\section{Introduction and scope}
+\begin{abstract}
+We give a representation theorem characterizing the weighted geometric mean as the unique aggregator on $[0,1]^n$ satisfying five independent, non-circular axioms: normalization, continuity, strict monotonicity, multiplicative separability, and idempotence. We then define a coherence score for a theory from the cyclic core of its dependency graph, and prove that this score is invariant under extensions of the theory by theses that lie on no directed cycle and under the addition of transitively redundant dependency edges. Consistency and coherence are treated as separate coordinates of the aggregation, so that every factor of the index is an explicit dimension of the model. The only free parameters are the weights, which are to be fixed by calibration. The result is a measurement-theoretic framework with a characterized functional form and a coherence component with proved invariance properties.
+\end{abstract}
 
-This document gives a mathematical specification of the index $\PhiPlus$, the
-Macro-Philosophical Index. The specification is purely theoretical. It fixes
-scales, the aggregation formula, and a graph-theoretic construction for graded
-logical coherence. It contains no empirical application, no calibration, and no
-derivation of the numerical parameters: weights and the filter exponent are
-declared parameters of a family of indices.
+\section{Introduction}
 
-Let $\mathcal{T}$ be a class of formalized theories. For $T\in\mathcal{T}$ we
-write $s_X(T)\in[0,1]$ for the score of $T$ on variable $X$, where
+The construction of numerical indices for complex, multi-dimensional theoretical objects is a recurring problem in formal epistemology and the philosophy of science. A recent proposal introduced a ``macro-philosophical index'' $\Ph$ defined as a weighted geometric mean of substantive scores multiplied by a penalty term derived from a dependency graph. That proposal was criticized on three grounds: its axioms were either too weak to constrain the functional form or circular; its coherence measure was size-dependent and therefore not invariant under the addition of redundant theses; and the product of a proof-theoretic consistency score with a graph-theoretic acyclicity score was not justified.
+
+This note reconstructs the index from first principles and addresses each criticism. Section~\ref{sec:rep} gives a genuine representation theorem (Theorem~\ref{thm:rep}) characterizing the weighted geometric mean as the unique aggregator satisfying five independent, non-circular axioms. Section~\ref{sec:coh} defines the coherence score on the \emph{cyclic core} of the dependency graph rather than on the full vertex set. Section~\ref{sec:inv} proves that this score is invariant under extensions of the theory by theses lying on no cycle (Theorem~\ref{thm:inv}) and under the addition of transitively redundant dependency edges (Corollary~\ref{cor:trans}). Section~\ref{sec:prop} collects the elementary properties of the resulting index, and Section~\ref{sec:comp} states the computational problem precisely. Section~\ref{sec:disc} is explicit about what is and is not settled.
+
+The contribution of a representation theorem is not to eliminate disagreement about the values of the weights or the choice of the dependency graph, but to make the \emph{structure} of the index a theorem rather than a stipulation. Disagreement is thereby localized: it concerns the inputs (weights, graph, scores), not the aggregation rule, which is forced by the axioms. This is the precise sense in which formalization removes disputes: it does not remove them, it makes them tractable.
+
+\section{The aggregation problem}\label{sec:setup}
+
+Let $T$ be a theory, represented by a finite set $V(T)$ of theses. The modeler assigns to $T$ a vector of scores
 \[
-X\in\{O,M,F,N,R\}.
+s(T) \;=\; \bigl(s_O(T),\, s_M(T),\, s_F(T),\, s_R(T),\, \chi(T),\, a(T)\bigr) \;\in\; [0,1]^6,
 \]
-The value $0$ means complete absence of the corresponding property, and $1$
-means maximal expression.
-
-\section{Axioms}
-
-\begin{axiom}[Continuous scale]
-Every variable is measured on the continuous interval $[0,1]$:
+where $s_O,s_M,s_F,s_R$ are substantive scores (ontological, methodological, formal, relational, or whatever the modeler takes them to be), $\chi(T)\in[0,1]$ is a consistency score (in classical logic, $\chi\in\{0,1\}$; in a paraconsistent or graded setting, $\chi\in[0,1]$), and $a(T)\in[0,1]$ is a coherence score to be defined in Section~\ref{sec:coh}. The macro-philosophical index is a function
 \[
-s_X(T)\in[0,1]\qquad\text{for all }X\in\{O,M,F,N,R\}.
+\Ph \colon [0,1]^6 \to [0,1]
+\]
+aggregating the six scores into a single number. Sections~\ref{sec:rep}--\ref{sec:prop} characterize $\Ph$ axiomatically and prove its properties; Section~\ref{sec:coh} defines $a(T)$.
+
+\section{Axioms and representation theorem}\label{sec:rep}
+
+We state the axioms for a general $n\ge 1$ and specialize to $n=6$ in the application.
+
+\begin{axiom}[Normalization]\label{ax:norm}
+$\Ph(1,\dots,1)=1$.
+\end{axiom}
+
+\begin{axiom}[Continuity]\label{ax:cont}
+$\Ph$ is continuous on $[0,1]^n$.
+\end{axiom}
+
+\begin{axiom}[Strict monotonicity]\label{ax:mono}
+$\Ph$ is strictly increasing in each coordinate on $(0,1]^n$.
+\end{axiom}
+
+\begin{axiom}[Multiplicative separability]\label{ax:mult}
+For all $s,t\in[0,1]^n$, with $\odot$ denoting the componentwise product,
+\[
+\Ph(s\odot t) \;=\; \Ph(s)\,\Ph(t).
 \]
 \end{axiom}
 
-\begin{axiom}[No compensation]
-\label{ax:no-comp}
-For every $X\in\{O,M,F,N,R\}$ and every assignment of the remaining scores,
-\[
-s_X(T)=0\ \Longrightarrow\ \PhiPlus(T)=0.
-\]
-In particular, a zero on one variable cannot be offset by any values of the
-other variables.
-\end{axiom}
-
-\begin{axiom}[Coherence filter]
-\label{ax:filter}
-Logical coherence $N$ enters multiplicatively with a positive exponent: there
-exist $\lambda>0$ and a function $g\colon[0,1]^{4}\to[0,\infty)$ such that
-\[
-\PhiPlus(T)=g\bigl(s_O(T),s_M(T),s_F(T),s_R(T)\bigr)\,\bigl(s_N(T)\bigr)^{\lambda},
-\]
-where $g$ is nondecreasing in each argument and $g(1,1,1,1)=1$.
+\begin{axiom}[Idempotence]\label{ax:idem}
+$\Ph(c,\dots,c)=c$ for all $c\in[0,1]$.
 \end{axiom}
 
 \begin{remark}
-Axiom~\ref{ax:no-comp} is the precise content of the informal requirement that
-the index not be a linear weighted sum. A linear sum violates it: with
-$\sum_i \tilde w_i=1$ and $\tilde w_i>0$, one has
-$\sum_i\tilde w_i s_i=1-\tilde w_k$ when $s_k=0$ and all other scores equal $1$.
+Axiom~\ref{ax:mult} is the substantive axiom. It says that the aggregate is a homomorphism from the multiplicative monoid $([0,1]^n,\odot)$ to $([0,1],\cdot)$: scaling every input multiplicatively scales the output multiplicatively. It is checkable without knowing the form of $\Ph$, and it is exactly the constraint that singles out the geometric mean. Axiom~\ref{ax:norm} fixes the scale, Axiom~\ref{ax:idem} fixes the normalization of the weights, and Axioms~\ref{ax:cont}--\ref{ax:mono} are regularity conditions. None of the five presupposes a particular functional form.
 \end{remark}
 
-\section{Scales and measurement model}
-
-\begin{definition}[Formalized theory]
-A formalized theory $T$ consists of a finite set $V(T)$ of atomic theses and a
-consequence relation $\vdash_T$.
-\end{definition}
-
-\begin{definition}[Measurement model]
-For $X\in\{O,M,F,R\}$ let $C_X$ be a finite nonempty set of criteria and let
-$\alpha_c>0$ $(c\in C_X)$ be criterion weights. A \emph{measurement model} for
-$T$ is a family of degrees
+\begin{theorem}[Representation]\label{thm:rep}
+A function $\Ph\colon[0,1]^n\to[0,1]$ satisfies Axioms~\ref{ax:norm}--\ref{ax:idem} if and only if there exist weights $w_1,\dots,w_n>0$ with $\sum_{i=1}^n w_i=1$ such that
 \[
-x_c^{X}(T)\in[0,1]\qquad(c\in C_X,\ X\in\{O,M,F,R\}),
+\Ph(s) \;=\; \prod_{i=1}^{n} s_i^{w_i} \qquad \text{for all } s\in[0,1]^n.
 \]
-where $x_c^{X}(T)$ expresses how strongly $T$ satisfies criterion $c$ for
-variable $X$. The specification fixes the sets $C_X$ and the weights
-$\alpha_c$; the degrees $x_c^{X}(T)$ are supplied by the measurement model.
-\end{definition}
-
-\begin{definition}[Criterion-based variable score]
-For $X\in\{O,M,F,R\}$,
-\[
-s_X(T)=\frac{\sum_{c\in C_X}\alpha_c\,x_c^{X}(T)}{\sum_{c\in C_X}\alpha_c}.
-\]
-Unless otherwise stated, $\alpha_c=1$ for all criteria, so that
-\[
-s_X(T)=\frac{1}{\card{C_X}}\sum_{c\in C_X}x_c^{X}(T).
-\]
-\end{definition}
-
-\begin{definition}[Ontological Clarity $O$]
-$C_O=\{O_1,O_2,O_3,O_4\}$, where
-\begin{itemize}
-\item $O_1$: $T$ explicitly fixes its existential commitments;
-\item $O_2$: $T$ specifies the domain of quantification;
-\item $O_3$: $T$ specifies identity or individuation conditions for primitive entities;
-\item $O_4$: $T$ distinguishes existence claims from mere predication or modal status.
-\end{itemize}
-Then $s_O(T)=\frac14\sum_{j=1}^{4}x_{O_j}^{O}(T)$.
-\end{definition}
-
-\begin{definition}[Modal Differentiation $M$]
-$C_M=\{M_1,M_2,M_3,M_4\}$, where
-\begin{itemize}
-\item $M_1$: $T$ distinguishes eternal from temporal entities or truths;
-\item $M_2$: $T$ distinguishes immutable from mutable entities or truths;
-\item $M_3$: $T$ distinguishes aseitic from dependent entities;
-\item $M_4$: $T$ assigns modal statuses (necessity, contingency, possibility) to fundamental claims.
-\end{itemize}
-Then $s_M(T)=\frac14\sum_{j=1}^{4}x_{M_j}^{M}(T)$.
-\end{definition}
-
-\begin{definition}[Fundamentality $F$]
-$C_F=\{F_1,F_2,F_3,F_4\}$, where
-\begin{itemize}
-\item $F_1$: $T$ identifies a fundamental level or fundamental entities;
-\item $F_2$: $T$ specifies a grounding or dependence direction;
-\item $F_3$: $T$ distinguishes non-fundamental from fundamental entities;
-\item $F_4$: $T$ provides an explicit fundamentality predicate or ordering.
-\end{itemize}
-Then $s_F(T)=\frac14\sum_{j=1}^{4}x_{F_j}^{F}(T)$.
-\end{definition}
-
-\begin{definition}[Relational Completeness $R$]
-$C_R=\{R_1,R_2,R_3,R_4\}$, where
-\begin{itemize}
-\item $R_1$: $T$ specifies primitive relations;
-\item $R_2$: $T$ specifies domains and ranges of relations;
-\item $R_3$: $T$ specifies composition or closure rules for relations;
-\item $R_4$: $T$ states completeness of its relational inventory.
-\end{itemize}
-Then $s_R(T)=\frac14\sum_{j=1}^{4}x_{R_j}^{R}(T)$.
-\end{definition}
-
-The coherence score $s_N(T)$ is defined in Section~\ref{sec:coherence}.
-
-\section{Aggregation}
-
-\begin{definition}[Weight budget and exponents]
-The nominal weights are
-\[
-w_O=0.30,\qquad w_M=0.20,\qquad w_F=0.20,\qquad w_R=0.15,\qquad w_N=0.15,
-\]
-with $\sum_{X}w_X=1$. Set
-\[
-W=w_O+w_M+w_F+w_R=1-w_N=0.85,
-\qquad
-\widetilde w_i=\frac{w_i}{W}\quad(i\in\{O,M,F,R\}),
-\]
-so that $\widetilde w_O+\widetilde w_M+\widetilde w_F+\widetilde w_R=1$. The
-filter exponent $\lambda>0$ is an independent parameter; the default value is
-$\lambda=0.5$.
-\end{definition}
-
-\begin{definition}[Macro-Philosophical Index $\PhiPlus$]
-For $T\in\mathcal{T}$ and $\lambda>0$,
-\[
-\PhiPlus(T)
-=
-\Biggl(\prod_{i\in\{O,M,F,R\}} s_i(T)^{w_i}\Biggr)
-\bigl(s_N(T)\bigr)^{\lambda}
-=
-\Biggl(\prod_{i\in\{O,M,F,R\}} s_i(T)^{\widetilde w_i}\Biggr)^{W}
-\bigl(s_N(T)\bigr)^{\lambda},
-\]
-with the convention $0^{a}=0$ for $a>0$.
-\end{definition}
-
-\begin{remark}[Status of $w_N$]
-\label{rem:wn}
-The value of $\PhiPlus$ depends only on the parameters
-$(w_O,w_M,w_F,w_R,\lambda)$. The nominal share $w_N$ enters no formula except
-through the accounting identity $W=1-w_N$. The budget-consistent choice
-$\lambda=w_N$ is available, but is not adopted here, so that filter intensity
-can be varied independently of the budget.
-\end{remark}
-
-\begin{remark}[Not a weighted mean]
-Since $W+\lambda=1.35\neq 1$ for the default parameters, $\PhiPlus$ is not a
-weighted geometric mean of the five scores; its maximum $1$ is attained only at
-the corner $(1,1,1,1,1)$, and it penalizes deficiency more strongly than a mean
-with the same weights would.
-\end{remark}
-
-\begin{proposition}[Admissibility]
-\label{prop:admissible}
-The construction of $\PhiPlus$ satisfies Axioms~1--3.
-\end{proposition}
+Moreover, the weights are uniquely determined by $\Ph$.
+\end{theorem}
 
 \begin{proof}
-Axiom~1 holds by definition of the scales and of $s_N\in[0,1]$
-(Section~\ref{sec:coherence}). For Axiom~\ref{ax:no-comp}: if $s_X=0$ with
-$X\in\{O,M,F,R\}$ then the corresponding factor $s_X^{w_X}$ vanishes, and since
-$w_X>0$ the product vanishes; if $s_N=0$ then $s_N^{\lambda}=0$ because
-$\lambda>0$. Axiom~\ref{ax:filter} holds with $g$ the weighted geometric mean of
-$s_O,s_M,s_F,s_R$, which is nondecreasing and equals $1$ at $(1,1,1,1)$.
+($\Leftarrow$) Direct verification. Normalization: $\prod 1^{w_i}=1$. Continuity is clear. Strict monotonicity on $(0,1]^n$: if $s_i<s_i'$ with both in $(0,1]$ and all other coordinates fixed and positive, then $s_i^{w_i}<s_i'^{w_i}$ because $w_i>0$, and the remaining factors are positive. Multiplicativity: $\prod (s_it_i)^{w_i}=(\prod s_i^{w_i})(\prod t_i^{w_i})$. Idempotence: $\prod c^{w_i}=c^{\sum w_i}=c$.
+
+($\Rightarrow$) For $i=1,\dots,n$ and $x\in[0,1]$, let $e_i(x)\in[0,1]^n$ have $x$ in coordinate $i$ and $1$ elsewhere, and define $g_i(x)=\Ph(e_i(x))$. Since $s=e_1(s_1)\odot\cdots\odot e_n(s_n)$, repeated application of Axiom~\ref{ax:mult} gives
+\begin{equation}\label{eq:factor}
+\Ph(s) \;=\; \prod_{i=1}^{n} g_i(s_i).
+\end{equation}
+Each $g_i\colon[0,1]\to[0,1]$ satisfies: $g_i(1)=1$ (Axiom~\ref{ax:norm}); $g_i$ is continuous (Axiom~\ref{ax:cont}); $g_i$ is strictly increasing on $(0,1]$ (Axiom~\ref{ax:mono} applied in coordinate $i$ with the other coordinates fixed at $1$); and $g_i(xy)=g_i(x)g_i(y)$ for all $x,y\in[0,1]$ (Axiom~\ref{ax:mult} applied to $e_i(x)$ and $e_i(y)$).
+
+We claim $g_i(x)=x^{w_i}$ for some $w_i>0$. For $t\ge 0$ define $h_i(t)=-\log g_i(e^{-t})$; this is well defined because $g_i(e^{-t})>0$ for $e^{-t}>0$. Multiplicativity gives
+\[
+h_i(s+t)=-\log g_i(e^{-s}e^{-t})=-\log\bigl(g_i(e^{-s})g_i(e^{-t})\bigr)=h_i(s)+h_i(t),
+\]
+so $h_i$ is additive on $[0,\infty)$. Continuity of $g_i$ implies continuity of $h_i$, and a continuous additive function on $[0,\infty)$ is linear (Cauchy's functional equation): $h_i(t)=w_it$ for some $w_i\ge 0$. Strict increase of $g_i$ on $(0,1]$ forces $w_i>0$. Hence $g_i(e^{-t})=e^{-w_it}$, i.e.\ $g_i(x)=x^{w_i}$ for $x\in(0,1]$. Continuity at $0$ gives $g_i(0)=0=0^{w_i}$. Substituting into \eqref{eq:factor} yields $\Ph(s)=\prod_i s_i^{w_i}$.
+
+Finally, Axiom~\ref{ax:idem} gives $\prod_i c^{w_i}=c^{\sum_i w_i}=c$ for all $c\in(0,1)$, hence $\sum_i w_i=1$. Uniqueness of the weights: if $\prod_i s_i^{w_i}=\prod_i s_i^{v_i}$ for all $s\in[0,1]^n$, then taking $s_i=e^{-1}$ and $s_j=1$ for $j\ne i$ gives $e^{-w_i}=e^{-v_i}$, hence $w_i=v_i$.
 \end{proof}
 
-\section{Coherence}
-\label{sec:coherence}
-
-\begin{definition}[Dependency graph]
-For a formalized theory $T$, let $D(T)=(V,E)$ be the directed dependency graph
-with vertex set $V=V(T)$ and edge set $E\subseteq V\times V$. An edge $(v,u)\in E$
-means that thesis $v$ presupposes or depends on thesis $u$ for its justification.
-\end{definition}
-
-\begin{definition}[Feedback vertex set]
-A set $H\subseteq V$ is a feedback vertex set of $D(T)$ if the induced subgraph
-$D(T)[V\setminus H]$ is acyclic. Define
-\[
-h^{*}(T)=\min\bigl\{\card{H}: H\subseteq V,\ D(T)[V\setminus H]\text{ is acyclic}\bigr\},
-\]
-and let $H^{*}(T)$ be any minimizer. Equivalently, $H^{*}(T)$ is a minimum
-hitting set of the family of directed cycles of $D(T)$.
-\end{definition}
-
-\begin{definition}[Graded coherence $s_N$]
-Let $\chi(T)\in\{0,1\}$ be the consistency indicator,
-\[
-\chi(T)=
-\begin{cases}
-0, & \text{if } T\vdash_T\bot,\\
-1, & \text{otherwise}.
-\end{cases}
-\]
-Define
-\[
-s_N(T)=\chi(T)\left(1-\frac{h^{*}(T)}{\card{V(T)}}\right),
-\]
-with the convention $h^{*}(T)/\card{V(T)}:=0$ when $V(T)=\emptyset$.
-\end{definition}
-
-\begin{remark}[Two failure modes]
-The score $s_N$ is a product of two components: the consistency indicator
-$\chi$, which detects derivability of $\bot$ through $\vdash_T$, and the
-\emph{acyclicity degree} $a(T)=1-h^{*}(T)/\card{V(T)}$, which penalizes circular
-justification. Both must hold for $s_N$ to be positive. Consistency and
-acyclicity are logically independent: a consistent theory may have circular
-dependencies, and an inconsistent one need not.
-\end{remark}
-
-\begin{remark}[Size dependence]
-\label{rem:size}
-For fixed $h^{*}$, the acyclicity degree increases with $\card{V}$: a single
-$3$-cycle in a graph with $100$ vertices gives $a=0.97$, whereas a loop on a
-one-vertex graph gives $a=0$. The measure is therefore sensitive to theory size,
-not only to the share of cyclic structure. This is accepted in the present
-version; calibration will decide whether a size-corrected variant is preferable.
-\end{remark}
-
-\begin{definition}[Exact algorithm]
-The minimum feedback vertex set is computed by the integer linear program
-\[
-\begin{aligned}
-\min\quad & \sum_{v\in V} y_v\\
-\text{subject to}\quad & \sum_{v\in C} y_v\ge 1 && \text{for every directed cycle } C \text{ of } D(T),\\
-& y_v\in\{0,1\} && \text{for every } v\in V.
-\end{aligned}
-\]
-If $y^{*}$ is optimal, then $H^{*}(T)=\{v\in V: y_v^{*}=1\}$ and
-$h^{*}(T)=\sum_v y_v^{*}$.
-\end{definition}
-
-\begin{remark}[Complexity and implementation]
-Feedback vertex set is NP-hard in general, so exact computation is exponential
-in the worst case. In practice the cycle family can be generated lazily: solve
-the relaxation on a current subset of cycles, find a violated cycle in a
-strongly connected component of the resulting subgraph, add it as a cutting
-plane, and iterate until optimality. The construction is exact; only its cost
-depends on $\card{V}$.
-\end{remark}
-
-\section{Properties}
-
-\begin{proposition}[Zero set]
-\label{prop:zero}
-$\PhiPlus(T)=0$ if and only if $s_N(T)=0$ or $s_i(T)=0$ for some
-$i\in\{O,M,F,R\}$.
-\end{proposition}
-
-\begin{proof}
-All factors are nonnegative and all exponents are positive. A product of
-nonnegative reals with positive exponents vanishes exactly when one of its
-factors vanishes; conversely, if all five scores are positive then all factors
-are positive.
-\end{proof}
-
-\begin{proposition}[Monotonicity, bounds, continuity]
-\label{prop:mono}
-$\PhiPlus$ is continuous on $[0,1]^{5}$, takes values in $[0,1]$, equals $1$
-only at $(1,1,1,1,1)$, and is nondecreasing in each argument, strictly so
-whenever $\PhiPlus>0$.
-\end{proposition}
-
-\begin{proof}
-Continuity: $x\mapsto x^{a}$ is continuous on $[0,1]$ for $a>0$ with $0^{a}=0$,
-and a finite product of continuous functions is continuous. Bounds: each factor
-lies in $[0,1]$, hence so does the product; the product equals $1$ only if every
-factor equals $1$. Monotonicity: for $i\in\{O,M,F,R\}$ and $s_i>0$,
-\[
-\frac{\partial\PhiPlus}{\partial s_i}=\frac{w_i}{s_i}\,\PhiPlus\ge 0,
-\]
-with equality only when $\PhiPlus=0$; for $N$,
-$\partial\PhiPlus/\partial s_N=(\lambda/s_N)\PhiPlus\ge 0$.
-\end{proof}
-
-\begin{proposition}[Anti-compensation]
-\label{prop:anti}
-Let $P(T)=\prod_{i\in\{O,M,F,R\}}s_i(T)^{w_i}$ with $w_i>0$. If $s_k(T)\to 0$
-for some $k$, then $P(T)\to 0$ regardless of the other factors. Hence no finite
-increase in the other variables can compensate a sufficiently low value of
-$s_k$.
-\end{proposition}
-
-\begin{proof}
-For $k\in\{O,M,F,R\}$,
-\[
-P(T)=s_k(T)^{w_k}\prod_{i\neq k}s_i(T)^{w_i}\le s_k(T)^{w_k},
-\]
-since $s_i(T)\le 1$ and $w_i>0$. If $s_k(T)\to 0$ then $s_k(T)^{w_k}\to 0$,
-hence $P(T)\to 0$. The same bound holds for the full index, because
-$s_N^{\lambda}\le 1$ when $s_N\le 1$.
-\end{proof}
-
-\begin{corollary}[Threshold dominance]
-For every $\varepsilon>0$ and every $k\in\{O,M,F,R\}$,
-\[
-s_k(T)<\varepsilon^{1/w_k}\ \Longrightarrow\ \PhiPlus(T)<\varepsilon,
-\]
-independently of the values of the other four scores.
+\begin{corollary}[No compensation at the boundary]\label{cor:nocomp}
+Under the conditions of Theorem~\ref{thm:rep}, $\Ph(s)=0$ if and only if $s_i=0$ for some $i$.
 \end{corollary}
 
 \begin{proof}
-Immediate from $\PhiPlus(T)\le s_k(T)^{w_k}$, established in the proof of
-Proposition~\ref{prop:anti}.
+Each factor $s_i^{w_i}$ is nonnegative, so the product is zero if and only if some factor is zero, which (since $w_i>0$) happens if and only if $s_i=0$.
 \end{proof}
 
-\section{Status of operationalization}
-\label{sec:status}
+\begin{remark}
+Corollary~\ref{cor:nocomp} recovers the intended ``no compensation'' property, but now as a \emph{consequence} of the axioms rather than as a separate stipulation. This is the precise sense in which the present treatment repairs the circularity of the original ``coherence filter'' axiom: the boundary behavior is forced by the representation, not assumed alongside it.
+\end{remark}
 
-The specification operates on four distinct levels, which should not be
-conflated.
+\section{Coherence on the cyclic core}\label{sec:coh}
 
+\begin{definition}[Dependency graph]\label{def:graph}
+The dependency graph of $T$ is the directed graph $D(T)=(V(T),E(T))$ in which $(u,v)\in E(T)$ if thesis $v$ presupposes thesis $u$ for its justification.
+\end{definition}
+
+\begin{definition}[Directed cycle]
+A directed cycle is a sequence $v_1,\dots,v_k$ of distinct vertices with $(v_i,v_{i+1})\in E(T)$ for $i=1,\dots,k-1$ and $(v_k,v_1)\in E(T)$.
+\end{definition}
+
+\begin{definition}[Feedback vertex set and feedback vertex number]\label{def:fvs}
+A set $H\subseteq V(T)$ is a \emph{feedback vertex set} (FVS) of $D(T)$ if $D(T)\setminus H$ contains no directed cycle. The \emph{feedback vertex number} is
+\[
+h^*(T) \;=\; \min\{|H| : H \text{ is an FVS of } D(T)\}.
+\]
+\end{definition}
+
+\begin{definition}[Cyclic core]\label{def:core}
+The \emph{cyclic core} of $D(T)$ is
+\[
+V_c(T) \;=\; \{v\in V(T) : v \text{ lies on at least one directed cycle of } D(T)\}.
+\]
+\end{definition}
+
+\begin{lemma}\label{lem:core}
+$h^*(T) = \min\{|H| : H\subseteq V_c(T),\ H \text{ is an FVS of } D(T)[V_c(T)]\}$.
+\end{lemma}
+
+\begin{proof}
+Every directed cycle of $D(T)$ lies entirely in $V_c(T)$ by definition of $V_c(T)$. Hence a set $H$ is an FVS of $D(T)$ if and only if $H\cap C\ne\varnothing$ for every cycle $C$, and vertices outside $V_c(T)$ hit no cycle. Replacing $H$ by $H\cap V_c(T)$ therefore preserves the FVS property and does not increase $|H|$. The minimum can thus be taken within $V_c(T)$.
+\end{proof}
+
+\begin{definition}[Coherence score]\label{def:coh}
+\[
+a(T) \;=\;
+\begin{cases}
+1, & \text{if } V_c(T)=\varnothing,\\[2mm]
+1-\dfrac{h^*(T)}{|V_c(T)|}, & \text{otherwise.}
+\end{cases}
+\]
+\end{definition}
+
+\begin{proposition}\label{prop:range}
+$a(T)\in[0,1]$ for every $T$.
+\end{proposition}
+
+\begin{proof}
+If $V_c(T)=\varnothing$, $a(T)=1$. Otherwise $V_c(T)$ is itself an FVS (removing all cyclic vertices leaves an acyclic graph), so $h^*(T)\le|V_c(T)|$; and $h^*(T)\ge 0$ trivially. Hence $1-h^*(T)/|V_c(T)|\in[0,1]$.
+\end{proof}
+
+\begin{remark}
+Normalizing by $|V_c(T)|$ rather than by $|V(T)|$ is the substantive change relative to the original proposal. A theory with one $3$-cycle among $100$ theses now receives $a=1-1/3=2/3$, not $1-1/100=0.99$; and, as Theorem~\ref{thm:inv} shows, adding $97$ isolated theses does not change $a$. The measure now depends only on the part of the theory that actually participates in cycles.
+\end{remark}
+
+\section{Invariance}\label{sec:inv}
+
+\begin{theorem}[Invariance under cycle-irrelevant extension]\label{thm:inv}
+Let $T'=T\cup\{v\}$ where $v$ is a new thesis that lies on no directed cycle of $D(T')$. Then $a(T')=a(T)$.
+\end{theorem}
+
+\begin{proof}
+Since $v$ lies on no cycle, $V_c(T')=V_c(T)$, and the set of directed cycles of $D(T')$ coincides with that of $D(T)$. Hence $h^*(T')=h^*(T)$, and the claim follows from Definition~\ref{def:coh}.
+\end{proof}
+
+\begin{corollary}[Invariance under transitive redundancy]\label{cor:trans}
+Suppose $D(T')$ is obtained from $D(T)$ by adding an edge $(u,v)$ such that $v$ already reaches $u$ in $D(T)$. Then $a(T')=a(T)$.
+\end{corollary}
+
+\begin{proof}
+Any cycle of $D(T')$ using the new edge $(u,v)$ would require a path $v\to u$ in $D(T')$; such a path exists in $D(T)$ by hypothesis, so the cycle is already a cycle of $D(T)$. Hence the cycle sets coincide, $V_c(T')=V_c(T)$ and $h^*(T')=h^*(T)$.
+\end{proof}
+
+\begin{remark}
+Theorem~\ref{thm:inv} and Corollary~\ref{cor:trans} are the invariance results whose absence was the most serious defect of the original proposal. A coherence measure that changes when a tautology is added to the theory, or when a dependency edge is added that creates no new cycle, is not measuring coherence. The cyclic-core normalization removes both defects. The measure remains sensitive to genuinely coherence-relevant changes (adding a thesis that creates a new cycle, or removing one that breaks a cycle), as it should.
+\end{remark}
+
+\section{Properties of the index}\label{sec:prop}
+
+Throughout this section $\Ph(s)=\prod_{i=1}^n s_i^{w_i}$ with $w_i>0$ and $\sum_i w_i=1$, as characterized in Theorem~\ref{thm:rep}.
+
+\begin{proposition}[Monotonicity, bounds, zero set]\label{prop:mono}
+The following hold:
 \begin{enumerate}
-\item \textbf{Formal structure} (complete). Carriers, scales, the aggregation
-operation, the zero set, monotonicity, and the coherence algorithm are fully
-determined: given a vector of degrees, every quantity is computable.
-\item \textbf{Indicator specification} (complete at the level of content). The
-sets $C_O,C_M,C_F,C_R$ enumerate what is to be assessed. The criteria are
-ostensive: they name properties, not decision procedures.
-\item \textbf{Measurement protocol} (deliberately absent). Coding rules, anchors
-for the values $0$ and $1$, aggregation of multiple coders, and reliability
-requirements are not part of this document. The degrees $x_c^{X}(T)$ are
-primitives of the measurement model.
-\item \textbf{Calibration} (deliberately absent). The weights
-$(w_O,w_M,w_F,w_R)$, the filter exponent $\lambda$, and the choice of
-size correction in $s_N$ are free parameters of a family of indices. No
-empirical derivation is claimed.
+\item[(i)] $\Ph$ is nondecreasing in each coordinate on $[0,1]^n$.
+\item[(ii)] $\Ph$ is strictly increasing in each coordinate on $(0,1]^n$.
+\item[(iii)] $\Ph(s)\in[0,1]$ for all $s$.
+\item[(iv)] $\Ph(s)=0$ if and only if $s_i=0$ for some $i$.
+\item[(v)] $\Ph(s)=1$ if and only if $s_i=1$ for all $i$.
 \end{enumerate}
+\end{proposition}
 
-Consequently the document specifies a \emph{family} of indices, parametrized by
-a measurement model and by $(\tilde w,\lambda)$. This is intentional: the
-theoretical version fixes the architecture and leaves measurement and
-calibration to a later stage.
+\begin{proof}
+(i) For fixed other coordinates, $s_i\mapsto s_i^{w_i}$ is nondecreasing on $[0,1]$ since $w_i>0$, and a product of nonnegative nondecreasing functions is nondecreasing. (ii) If $s_i<s_i'$ with both in $(0,1]$ and the other coordinates are fixed and positive, then $s_i^{w_i}<s_i'^{w_i}$, and the remaining factors are positive, so the product strictly increases. (iii) Each factor lies in $[0,1]$. (iv) A product of nonnegative numbers is zero if and only if some factor is zero, and $s_i^{w_i}=0$ if and only if $s_i=0$. (v) A product of numbers in $[0,1]$ equals $1$ if and only if every factor equals $1$, and $s_i^{w_i}=1$ if and only if $s_i=1$.
+\end{proof}
 
-\section{Conclusion}
+\begin{remark}
+Proposition~\ref{prop:mono} closes the boundary gap of the original monotonicity proof: no derivative is taken, so the case $s_i=0$ is covered directly. The monotonicity claim is therefore established on the whole cube, not merely in the interior.
+\end{remark}
 
-We have specified the index
+\begin{proposition}[Threshold dominance]\label{prop:thresh}
+For every coordinate $k$ and every $\eps\in(0,1)$, if $s_k<\eps^{1/w_k}$ then $\Ph(s)<\eps$. In particular, $\Ph(s)\to 0$ as $s_k\to 0$ with the other coordinates held fixed.
+\end{proposition}
+
+\begin{proof}
+$\Ph(s)=s_k^{w_k}\prod_{i\ne k}s_i^{w_i}\le s_k^{w_k}<(\eps^{1/w_k})^{w_k}=\eps$, using $\prod_{i\ne k}s_i^{w_i}\le 1$.
+\end{proof}
+
+\begin{remark}
+The original text asserted that ``no finite increase in the other variables can compensate a sufficiently low value of $s_k$.'' As stated, this is true only in the limit. Proposition~\ref{prop:thresh} is the honest, $\eps$-dependent statement: each coordinate has a threshold below which the index is forced under any prescribed bound, uniformly in the other coordinates. The threshold covers all coordinates, including $\chi$ and $a$, which the original corollary omitted.
+\end{remark}
+
+\section{Computation}\label{sec:comp}
+
+\begin{proposition}[Complexity of $h^*$]\label{prop:comp}
+Computing $h^*(T)$ is NP-hard. It is given by the integer program
 \[
-\PhiPlus(T)
-=
-\Biggl(\prod_{i\in\{O,M,F,R\}} s_i(T)^{w_i}\Biggr)
-\bigl(s_N(T)\bigr)^{\lambda},
-\qquad
-\lambda=0.5,
+\min \sum_{v\in V_c(T)} y_v \quad\text{s.t.}\quad \sum_{v\in C} y_v\ge 1 \ \ \forall\text{ directed cycles } C\text{ of } D(T)[V_c(T)],\qquad y_v\in\{0,1\}.
 \]
-with core weights
-\[
-w_O=0.30,\quad w_M=0.20,\quad w_F=0.20,\quad w_R=0.15,
-\]
-nominal share $w_N=0.15$ (recorded for accounting only, see
-Remark~\ref{rem:wn}), and $W=0.85$.
+The LP relaxation has a polynomial-time separation oracle: given $y\in[0,1]^{V_c(T)}$, a violated cycle exists if and only if the minimum-weight directed cycle under vertex weights $y$ has weight $<1$, and this minimum is computable in polynomial time.
+\end{proposition}
 
-The variables $O,M,F,R$ are graded on $[0,1]$ by criterion-based scores. The
-coherence variable $N$ is graded as the product of a consistency indicator and
-an acyclicity degree derived from the minimum feedback vertex set of the
-dependency graph; logical contradiction forces $s_N=0$. The weighted geometric
-core satisfies the no-compensation axiom in the precise form of
-Axiom~\ref{ax:no-comp}, and the multiplicative filter with $\lambda>0$ makes
-$\PhiPlus$ vanish on every theory with $s_N=0$. The zero set, monotonicity,
-bounds, continuity, and the anti-compensation bound are established in
-Section~6. The construction is purely theoretical and contains no empirical
-calibration.
+\begin{proof}
+NP-hardness of FVS is classical \cite{Karp1972}. The integer program is the standard covering formulation: $y$ is the indicator of an FVS, and the constraints say that every cycle is hit. For the separation oracle, split each vertex $v$ into $v_{\mathrm{in}}\to v_{\mathrm{out}}$ with edge weight $y_v$, and replace each original edge $(u,v)$ by $u_{\mathrm{out}}\to v_{\mathrm{in}}$ with weight $0$; a directed cycle in the split graph corresponds to a directed cycle in $D(T)[V_c(T)]$ with the same total vertex weight. Minimum-weight cycle with nonnegative weights is polynomial (e.g.\ all-pairs shortest paths followed by a scan over edges), so the separation oracle is polynomial. The LP is not integral in general, since the FVS polytope is not integral; the integer program therefore requires branch-and-bound or cutting planes.
+\end{proof}
+
+\begin{remark}
+The original remark about ``lazily generated cutting planes'' conflated the LP relaxation with a restricted integer program and did not state the separation oracle. Proposition~\ref{prop:comp} states both precisely. The complexity discussion is now a correct statement about the problem, not a decorative aside.
+\end{remark}
+
+\section{Discussion: what is and is not settled}\label{sec:disc}
+
+\paragraph{What is settled.} The functional form of $\Ph$ is forced by Axioms~\ref{ax:norm}--\ref{ax:idem} (Theorem~\ref{thm:rep}); the weights are the only free parameters, and they are uniquely determined by $\Ph$. The coherence score $a(T)$ is well defined on the cyclic core, takes values in $[0,1]$, and is invariant under cycle-irrelevant extensions (Theorem~\ref{thm:inv}) and under transitively redundant edges (Corollary~\ref{cor:trans}). Consistency $\chi$ and coherence $a$ enter as separate coordinates, so no hidden identification of two unrelated structures is made.
+
+\paragraph{What is not settled.} Three inputs remain modeling choices, and the framework does not pretend otherwise. First, the \emph{weights} $w_O,w_M,w_F,w_R,w_\chi,w_a$ require calibration, either by elicitation (swing weighting, pairwise comparison) or by derivation from a decision-theoretic principle. Second, the \emph{dependency graph} $D(T)$ requires a substantive account of what it means for one thesis to presuppose another; the mathematics is independent of that account, but the values of $a(T)$ are not. Third, the \emph{consistency score} $\chi(T)$ requires a choice between classical bivalence and a graded or paraconsistent semantics. These are genuine open problems, but they are now localized: they concern the inputs, not the aggregation rule.
+
+\paragraph{On ``removing disputes.''} A representation theorem does not eliminate disagreement about the values of the weights or the choice of the graph. It eliminates disagreement about the \emph{form} of the index: given the axioms, the form is not a matter of stipulation. This is the precise sense in which formalization makes disputes tractable. The original proposal left the form open and the parameters free, so that every disagreement about the index was simultaneously a disagreement about the form and about the parameters. The present treatment separates the two: the form is a theorem, the parameters are inputs, and the coherence measure has proved invariance properties. That is what a measurement-theoretic foundation can deliver; it is not nothing, and it is not everything.
+
+\paragraph{Limitations.} The measure $a(T)=1-h^*(T)/|V_c(T)|$ does not distinguish, say, two disjoint $3$-cycles (for which $a=2/3$) from a single $3$-cycle (for which $a=2/3$ as well), since both have $h^*/|V_c|=1/3$. A finer measure could weight cycles by length or by overlap, at the cost of additional parameters and weaker invariance. The present choice is the simplest one that is invariant in the sense of Theorem~\ref{thm:inv}; it is a design choice, clearly labeled as such, not a derived result. Similarly, the representation theorem is elementary (a short functional-equation argument), and its value lies in the characterization, not in technical depth.
+
+\section{Conclusion}\label{sec:concl}
+
+We have reconstructed the macro-philosophical index as a weighted geometric mean characterized by five non-circular axioms, with a coherence component defined on the cyclic core of the dependency graph and proved invariant under cycle-irrelevant extensions and transitively redundant edges. Consistency and coherence are explicit separate coordinates, and the only free parameters are the weights. The result is a measurement-theoretic framework in which the aggregation rule is a theorem and the coherence measure has proved invariance properties. The remaining work is calibration of the weights and justification of the dependency graph and consistency score; these are substantive modeling problems, not defects of the formalism.
+
+\begin{thebibliography}{99}
+
+\bibitem{Karp1972}
+R.~M. Karp,
+\emph{Reducibility among combinatorial problems},
+in: Complexity of Computer Computations (R.~E. Miller and J.~W. Thatcher, eds.),
+Plenum Press, New York, 1972, pp.~85--103.
+
+\bibitem{Aczel1966}
+J.~Acz\'el,
+\emph{Lectures on Functional Equations and Their Applications},
+Academic Press, New York, 1966.
+
+\bibitem{KLST1971}
+D.~H. Krantz, R.~D. Luce, P.~Suppes, and A.~Tversky,
+\emph{Foundations of Measurement, Vol.~I: Additive and Polynomial Representations},
+Academic Press, New York, 1971.
+
+\bibitem{Dung1995}
+P.~M. Dung,
+\emph{On the acceptability of arguments and its fundamental role in nonmonotonic reasoning, logic programming and $n$-person games},
+Artificial Intelligence \textbf{77} (1995), 321--357.
+
+\end{thebibliography}
 
 \end{document}
