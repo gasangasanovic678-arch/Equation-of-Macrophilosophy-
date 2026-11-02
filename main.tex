@@ -27,14 +27,14 @@ Weighted Geometric Aggregation with an Invariant Coherence Measure}
 \maketitle
 
 \begin{abstract}
-We give a representation theorem characterizing the weighted geometric mean as the unique aggregator on $[0,1]^n$ satisfying five independent, non-circular axioms: normalization, continuity, strict monotonicity, multiplicative separability, and idempotence. We then define a coherence score for a theory from the cyclic core of its dependency graph, and prove that this score is invariant under extensions of the theory by theses that lie on no directed cycle and under the addition of transitively redundant dependency edges. Consistency and coherence are treated as separate coordinates of the aggregation, so that every factor of the index is an explicit dimension of the model. The only free parameters are the weights, which are to be fixed by calibration. The result is a measurement-theoretic framework with a characterized functional form and a coherence component with proved invariance properties.
+We give a representation theorem characterizing the weighted geometric mean as the unique aggregator on $[0,1]^n$ satisfying five independent, non-circular axioms: normalization, continuity, strict monotonicity, multiplicative separability, and idempotence; independence of the axioms is established by explicit counterexamples. We then define a coherence score for a theory from the cyclic core of its dependency graph, and prove that this score is invariant under extensions of the theory by theses that lie on no directed cycle and under the addition of dependency edges that create no new cycle. Consistency and coherence are treated as separate coordinates of the aggregation, so that every factor of the index is an explicit dimension of the model. The only free parameters are the weights, which are to be fixed by calibration. The result is a measurement-theoretic framework with a characterized functional form and a coherence component with proved invariance properties.
 \end{abstract}
 
 \section{Introduction}
 
 The construction of numerical indices for complex, multi-dimensional theoretical objects is a recurring problem in formal epistemology and the philosophy of science. A recent proposal introduced a ``macro-philosophical index'' $\Ph$ defined as a weighted geometric mean of substantive scores multiplied by a penalty term derived from a dependency graph. That proposal was criticized on three grounds: its axioms were either too weak to constrain the functional form or circular; its coherence measure was size-dependent and therefore not invariant under the addition of redundant theses; and the product of a proof-theoretic consistency score with a graph-theoretic acyclicity score was not justified.
 
-This note reconstructs the index from first principles and addresses each criticism. Section~\ref{sec:rep} gives a genuine representation theorem (Theorem~\ref{thm:rep}) characterizing the weighted geometric mean as the unique aggregator satisfying five independent, non-circular axioms. Section~\ref{sec:coh} defines the coherence score on the \emph{cyclic core} of the dependency graph rather than on the full vertex set. Section~\ref{sec:inv} proves that this score is invariant under extensions of the theory by theses lying on no cycle (Theorem~\ref{thm:inv}) and under the addition of transitively redundant dependency edges (Corollary~\ref{cor:trans}). Section~\ref{sec:prop} collects the elementary properties of the resulting index, and Section~\ref{sec:comp} states the computational problem precisely. Section~\ref{sec:disc} is explicit about what is and is not settled.
+This note reconstructs the index from first principles and addresses each criticism. Section~\ref{sec:rep} gives a genuine representation theorem (Theorem~\ref{thm:rep}) characterizing the weighted geometric mean as the unique aggregator satisfying five independent, non-circular axioms; the independence of the axioms is verified in Remark~\ref{rem:indep}. Section~\ref{sec:coh} defines the coherence score on the \emph{cyclic core} of the dependency graph rather than on the full vertex set. Section~\ref{sec:inv} proves that this score is invariant under extensions of the theory by theses lying on no cycle (Theorem~\ref{thm:inv}) and under the addition of dependency edges that create no new cycle (Corollary~\ref{cor:trans}). Section~\ref{sec:prop} collects the elementary properties of the resulting index, and Section~\ref{sec:comp} states the computational problem precisely. Section~\ref{sec:disc} is explicit about what is and is not settled.
 
 The contribution of a representation theorem is not to eliminate disagreement about the values of the weights or the choice of the dependency graph, but to make the \emph{structure} of the index a theorem rather than a stipulation. Disagreement is thereby localized: it concerns the inputs (weights, graph, scores), not the aggregation rule, which is forced by the axioms. This is the precise sense in which formalization removes disputes: it does not remove them, it makes them tractable.
 
@@ -63,7 +63,7 @@ $\Ph$ is continuous on $[0,1]^n$.
 \end{axiom}
 
 \begin{axiom}[Strict monotonicity]\label{ax:mono}
-$\Ph$ is strictly increasing in each coordinate on $(0,1]^n$.
+$\Ph$ is strictly increasing in each coordinate on $(0,1]^n$: if $s_i<s_i'$ with $s_i,s_i'\in(0,1]$ and all other coordinates equal and positive, then $\Ph(s)<\Ph(s')$.
 \end{axiom}
 
 \begin{axiom}[Multiplicative separability]\label{ax:mult}
@@ -96,16 +96,39 @@ Moreover, the weights are uniquely determined by $\Ph$.
 \begin{equation}\label{eq:factor}
 \Ph(s) \;=\; \prod_{i=1}^{n} g_i(s_i).
 \end{equation}
-Each $g_i\colon[0,1]\to[0,1]$ satisfies: $g_i(1)=1$ (Axiom~\ref{ax:norm}); $g_i$ is continuous (Axiom~\ref{ax:cont}); $g_i$ is strictly increasing on $(0,1]$ (Axiom~\ref{ax:mono} applied in coordinate $i$ with the other coordinates fixed at $1$); and $g_i(xy)=g_i(x)g_i(y)$ for all $x,y\in[0,1]$ (Axiom~\ref{ax:mult} applied to $e_i(x)$ and $e_i(y)$).
+Each $g_i\colon[0,1]\to[0,1]$ satisfies:
+\begin{itemize}
+\item $g_i(1)=1$ (Axiom~\ref{ax:norm});
+\item $g_i$ is continuous (Axiom~\ref{ax:cont});
+\item $g_i$ is strictly increasing on $(0,1]$ (Axiom~\ref{ax:mono} applied in coordinate $i$ with the other coordinates fixed at $1$);
+\item $g_i(xy)=g_i(x)g_i(y)$ for all $x,y\in[0,1]$ (Axiom~\ref{ax:mult} applied to $e_i(x)$ and $e_i(y)$).
+\end{itemize}
 
-We claim $g_i(x)=x^{w_i}$ for some $w_i>0$. For $t\ge 0$ define $h_i(t)=-\log g_i(e^{-t})$; this is well defined because $g_i(e^{-t})>0$ for $e^{-t}>0$. Multiplicativity gives
+We claim $g_i(x)=x^{w_i}$ for some $w_i>0$. For $t\ge 0$ define $h_i(t)=-\log g_i(e^{-t})$; this is well defined because $g_i(e^{-t})>0$ for $e^{-t}>0$ (as $g_i$ is strictly increasing on $(0,1]$ and $g_i(1)=1>0$, hence $g_i(x)>0$ for $x\in(0,1]$). Multiplicativity gives
 \[
 h_i(s+t)=-\log g_i(e^{-s}e^{-t})=-\log\bigl(g_i(e^{-s})g_i(e^{-t})\bigr)=h_i(s)+h_i(t),
 \]
-so $h_i$ is additive on $[0,\infty)$. Continuity of $g_i$ implies continuity of $h_i$, and a continuous additive function on $[0,\infty)$ is linear (Cauchy's functional equation): $h_i(t)=w_it$ for some $w_i\ge 0$. Strict increase of $g_i$ on $(0,1]$ forces $w_i>0$. Hence $g_i(e^{-t})=e^{-w_it}$, i.e.\ $g_i(x)=x^{w_i}$ for $x\in(0,1]$. Continuity at $0$ gives $g_i(0)=0=0^{w_i}$. Substituting into \eqref{eq:factor} yields $\Ph(s)=\prod_i s_i^{w_i}$.
+so $h_i$ is additive on $[0,\infty)$. Continuity of $g_i$ implies continuity of $h_i$, and a continuous additive function on $[0,\infty)$ is linear (Cauchy's functional equation): $h_i(t)=w_it$ for some $w_i\ge 0$. Strict increase of $g_i$ on $(0,1]$ forces $w_i>0$. Hence $g_i(e^{-t})=e^{-w_it}$, i.e.\ $g_i(x)=x^{w_i}$ for $x\in(0,1]$.
+
+It remains to determine $g_i(0)$. By continuity of $\Ph$ at the origin and $\lim_{x\to 0+}g_i(x)=\lim_{x\to 0+}x^{w_i}=0$, we have
+\[
+g_i(0)=\Ph(e_i(0))=\lim_{x\to 0+}\Ph(e_i(x))=\lim_{x\to 0+}g_i(x)=0.
+\]
+Thus $g_i(0)=0=0^{w_i}$. Substituting into \eqref{eq:factor} yields $\Ph(s)=\prod_i s_i^{w_i}$.
 
 Finally, Axiom~\ref{ax:idem} gives $\prod_i c^{w_i}=c^{\sum_i w_i}=c$ for all $c\in(0,1)$, hence $\sum_i w_i=1$. Uniqueness of the weights: if $\prod_i s_i^{w_i}=\prod_i s_i^{v_i}$ for all $s\in[0,1]^n$, then taking $s_i=e^{-1}$ and $s_j=1$ for $j\ne i$ gives $e^{-w_i}=e^{-v_i}$, hence $w_i=v_i$.
 \end{proof}
+
+\begin{remark}[Independence of the axioms]\label{rem:indep}
+The five axioms are independent, in the sense that none is a consequence of the other four. For $n\ge 2$:
+\begin{itemize}
+\item Dropping \ref{ax:norm}: $\Ph(s)=2\prod_i s_i^{w_i}$ satisfies \ref{ax:cont}--\ref{ax:idem} but not \ref{ax:norm}.
+\item Dropping \ref{ax:cont}: the function that agrees with $\prod_i s_i^{w_i}$ on $(0,1]^n$ and equals $0$ on the boundary satisfies \ref{ax:norm}, \ref{ax:mono}, \ref{ax:mult}, \ref{ax:idem} but is not continuous.
+\item Dropping \ref{ax:mono}: $\Ph\equiv 0$ satisfies \ref{ax:norm}? No---it fails \ref{ax:norm}. Instead, $\Ph(s)=\prod_i s_i^{w_i}$ with some $w_i=0$ satisfies \ref{ax:norm}, \ref{ax:cont}, \ref{ax:mult}, \ref{ax:idem} but not \ref{ax:mono}.
+\item Dropping \ref{ax:mult}: the weighted arithmetic mean $\sum_i w_i s_i$ satisfies \ref{ax:norm}, \ref{ax:cont}, \ref{ax:mono} (on the interior), \ref{ax:idem} but not \ref{ax:mult}.
+\item Dropping \ref{ax:idem}: $\Ph(s)=\prod_i s_i^{w_i}$ with $\sum_i w_i\ne 1$ satisfies \ref{ax:norm}, \ref{ax:cont}, \ref{ax:mono}, \ref{ax:mult} but not \ref{ax:idem}.
+\end{itemize}
+\end{remark}
 
 \begin{corollary}[No compensation at the boundary]\label{cor:nocomp}
 Under the conditions of Theorem~\ref{thm:rep}, $\Ph(s)=0$ if and only if $s_i=0$ for some $i$.
@@ -148,7 +171,7 @@ $h^*(T) = \min\{|H| : H\subseteq V_c(T),\ H \text{ is an FVS of } D(T)[V_c(T)]\}
 \end{lemma}
 
 \begin{proof}
-Every directed cycle of $D(T)$ lies entirely in $V_c(T)$ by definition of $V_c(T)$. Hence a set $H$ is an FVS of $D(T)$ if and only if $H\cap C\ne\varnothing$ for every cycle $C$, and vertices outside $V_c(T)$ hit no cycle. Replacing $H$ by $H\cap V_c(T)$ therefore preserves the FVS property and does not increase $|H|$. The minimum can thus be taken within $V_c(T)$.
+Every directed cycle of $D(T)$ lies entirely in $V_c(T)$ by definition of $V_c(T)$; in particular, $D(T)[V_c(T)]$ contains all cycles of $D(T)$ and no others. Hence a set $H$ is an FVS of $D(T)$ if and only if $H\cap C\ne\varnothing$ for every cycle $C$ of $D(T)[V_c(T)]$, and vertices outside $V_c(T)$ hit no cycle. Replacing $H$ by $H\cap V_c(T)$ therefore preserves the FVS property and does not increase $|H|$. The minimum can thus be taken within $V_c(T)$.
 \end{proof}
 
 \begin{definition}[Coherence score]\label{def:coh}
@@ -162,11 +185,11 @@ a(T) \;=\;
 \end{definition}
 
 \begin{proposition}\label{prop:range}
-$a(T)\in[0,1]$ for every $T$.
+$a(T)\in[0,1]$ for every $T$. Moreover, $a(T)=1$ if and only if $D(T)$ is acyclic.
 \end{proposition}
 
 \begin{proof}
-If $V_c(T)=\varnothing$, $a(T)=1$. Otherwise $V_c(T)$ is itself an FVS (removing all cyclic vertices leaves an acyclic graph), so $h^*(T)\le|V_c(T)|$; and $h^*(T)\ge 0$ trivially. Hence $1-h^*(T)/|V_c(T)|\in[0,1]$.
+If $V_c(T)=\varnothing$, then $D(T)$ is acyclic by definition of $V_c(T)$, and $a(T)=1$. Conversely, if $D(T)$ is acyclic then $V_c(T)=\varnothing$ and $a(T)=1$. If $V_c(T)\ne\varnothing$, then $V_c(T)$ is itself an FVS (removing all cyclic vertices leaves an acyclic graph), so $h^*(T)\le|V_c(T)|$; and $h^*(T)\ge 0$ trivially. Hence $1-h^*(T)/|V_c(T)|\in[0,1]$, and $a(T)<1$ because $h^*(T)\ge 1$ (the cyclic core is nonempty and every vertex of $V_c(T)$ lies on a cycle, so at least one vertex must be removed).
 \end{proof}
 
 \begin{remark}
@@ -183,13 +206,17 @@ Let $T'=T\cup\{v\}$ where $v$ is a new thesis that lies on no directed cycle of 
 Since $v$ lies on no cycle, $V_c(T')=V_c(T)$, and the set of directed cycles of $D(T')$ coincides with that of $D(T)$. Hence $h^*(T')=h^*(T)$, and the claim follows from Definition~\ref{def:coh}.
 \end{proof}
 
-\begin{corollary}[Invariance under transitive redundancy]\label{cor:trans}
-Suppose $D(T')$ is obtained from $D(T)$ by adding an edge $(u,v)$ such that $v$ already reaches $u$ in $D(T)$. Then $a(T')=a(T)$.
+\begin{corollary}[Invariance under cycle-neutral edge addition]\label{cor:trans}
+Suppose $D(T')$ is obtained from $D(T)$ by adding an edge $(u,v)$ that creates no new directed cycle, i.e.\ such that there is no path $v\to u$ in $D(T)$. Then $a(T')=a(T)$.
 \end{corollary}
 
 \begin{proof}
-Any cycle of $D(T')$ using the new edge $(u,v)$ would require a path $v\to u$ in $D(T')$; such a path exists in $D(T)$ by hypothesis, so the cycle is already a cycle of $D(T)$. Hence the cycle sets coincide, $V_c(T')=V_c(T)$ and $h^*(T')=h^*(T)$.
+Under the hypothesis, every cycle of $D(T')$ is already a cycle of $D(T)$: a cycle using the new edge $(u,v)$ would require a path $v\to u$ in $D(T')$, hence in $D(T)$ (since the only new edge is $(u,v)$, which cannot occur on a path from $v$ to $u$ without already containing a cycle), contradicting the hypothesis. Hence the cycle sets coincide, $V_c(T')=V_c(T)$ and $h^*(T')=h^*(T)$.
 \end{proof}
+
+\begin{remark}[A correction]\label{rem:correction}
+An earlier formulation of Corollary~\ref{cor:trans} required that $v$ already reaches $u$ in $D(T)$. That formulation is \emph{false}: if $v$ reaches $u$ in $D(T)$, then adding $(u,v)$ creates the cycle $u\to v\to\cdots\to u$, which is new (it was not a cycle of $D(T)$, since the edge $(u,v)$ was absent). For example, let $D(T)$ be the path $a\to b\to c$ and add the edge $c\to a$; the new cycle $a\to b\to c\to a$ makes all three vertices enter $V_c$, changing $a(T)$ from $1$ to $2/3$. The correct hypothesis is the negation: the added edge must create \emph{no} new cycle, which is equivalent to the non-existence of a path $v\to u$ in $D(T)$.
+\end{remark}
 
 \begin{remark}
 Theorem~\ref{thm:inv} and Corollary~\ref{cor:trans} are the invariance results whose absence was the most serious defect of the original proposal. A coherence measure that changes when a tautology is added to the theory, or when a dependency edge is added that creates no new cycle, is not measuring coherence. The cyclic-core normalization removes both defects. The measure remains sensitive to genuinely coherence-relevant changes (adding a thesis that creates a new cycle, or removing one that breaks a cycle), as it should.
@@ -219,11 +246,11 @@ Proposition~\ref{prop:mono} closes the boundary gap of the original monotonicity
 \end{remark}
 
 \begin{proposition}[Threshold dominance]\label{prop:thresh}
-For every coordinate $k$ and every $\eps\in(0,1)$, if $s_k<\eps^{1/w_k}$ then $\Ph(s)<\eps$. In particular, $\Ph(s)\to 0$ as $s_k\to 0$ with the other coordinates held fixed.
+For every coordinate $k$ and every $\eps\in(0,1)$, if $s_k<\eps^{1/w_k}$ then $\Ph(s)<\eps$. The threshold $\eps^{1/w_k}$ is optimal: for $s_k=\eps^{1/w_k}$ and $s_i=1$ for $i\ne k$, one has $\Ph(s)=\eps$. In particular, $\Ph(s)\to 0$ as $s_k\to 0$ with the other coordinates held fixed.
 \end{proposition}
 
 \begin{proof}
-$\Ph(s)=s_k^{w_k}\prod_{i\ne k}s_i^{w_i}\le s_k^{w_k}<(\eps^{1/w_k})^{w_k}=\eps$, using $\prod_{i\ne k}s_i^{w_i}\le 1$.
+$\Ph(s)=s_k^{w_k}\prod_{i\ne k}s_i^{w_i}\le s_k^{w_k}<(\eps^{1/w_k})^{w_k}=\eps$, using $\prod_{i\ne k}s_i^{w_i}\le 1$. Optimality: at $s_k=\eps^{1/w_k}$ and $s_i=1$ for $i\ne k$, $\Ph(s)=(\eps^{1/w_k})^{w_k}=\eps$.
 \end{proof}
 
 \begin{remark}
@@ -241,7 +268,7 @@ The LP relaxation has a polynomial-time separation oracle: given $y\in[0,1]^{V_c
 \end{proposition}
 
 \begin{proof}
-NP-hardness of FVS is classical \cite{Karp1972}. The integer program is the standard covering formulation: $y$ is the indicator of an FVS, and the constraints say that every cycle is hit. For the separation oracle, split each vertex $v$ into $v_{\mathrm{in}}\to v_{\mathrm{out}}$ with edge weight $y_v$, and replace each original edge $(u,v)$ by $u_{\mathrm{out}}\to v_{\mathrm{in}}$ with weight $0$; a directed cycle in the split graph corresponds to a directed cycle in $D(T)[V_c(T)]$ with the same total vertex weight. Minimum-weight cycle with nonnegative weights is polynomial (e.g.\ all-pairs shortest paths followed by a scan over edges), so the separation oracle is polynomial. The LP is not integral in general, since the FVS polytope is not integral; the integer program therefore requires branch-and-bound or cutting planes.
+NP-hardness of FVS is classical \cite{Karp1972}. The integer program is the standard covering formulation: $y$ is the indicator of an FVS, and the constraints say that every cycle is hit. For the separation oracle, split each vertex $v$ into $v_{\mathrm{in}}\to v_{\mathrm{out}}$ with edge weight $y_v$, and replace each original edge $(u,v)$ by $u_{\mathrm{out}}\to v_{\mathrm{in}}$ with weight $0$. All edge weights in the split graph are nonnegative. A directed cycle in the split graph corresponds to a directed cycle in $D(T)[V_c(T)]$ with the same total vertex weight. Minimum-weight cycle with nonnegative weights is polynomial (e.g.\ all-pairs shortest paths followed by a scan over edges), so the separation oracle is polynomial. The LP is not integral in general, since the FVS polytope is not integral; the integer program therefore requires branch-and-bound or cutting planes.
 \end{proof}
 
 \begin{remark}
@@ -250,7 +277,7 @@ The original remark about ``lazily generated cutting planes'' conflated the LP r
 
 \section{Discussion: what is and is not settled}\label{sec:disc}
 
-\paragraph{What is settled.} The functional form of $\Ph$ is forced by Axioms~\ref{ax:norm}--\ref{ax:idem} (Theorem~\ref{thm:rep}); the weights are the only free parameters, and they are uniquely determined by $\Ph$. The coherence score $a(T)$ is well defined on the cyclic core, takes values in $[0,1]$, and is invariant under cycle-irrelevant extensions (Theorem~\ref{thm:inv}) and under transitively redundant edges (Corollary~\ref{cor:trans}). Consistency $\chi$ and coherence $a$ enter as separate coordinates, so no hidden identification of two unrelated structures is made.
+\paragraph{What is settled.} The functional form of $\Ph$ is forced by Axioms~\ref{ax:norm}--\ref{ax:idem} (Theorem~\ref{thm:rep}), and the axioms are independent (Remark~\ref{rem:indep}); the weights are the only free parameters, and they are uniquely determined by $\Ph$. The coherence score $a(T)$ is well defined on the cyclic core, takes values in $[0,1]$, equals $1$ exactly on acyclic dependency graphs (Proposition~\ref{prop:range}), and is invariant under cycle-irrelevant extensions (Theorem~\ref{thm:inv}) and under cycle-neutral edge additions (Corollary~\ref{cor:trans}). Consistency $\chi$ and coherence $a$ enter as separate coordinates, so no hidden identification of two unrelated structures is made.
 
 \paragraph{What is not settled.} Three inputs remain modeling choices, and the framework does not pretend otherwise. First, the \emph{weights} $w_O,w_M,w_F,w_R,w_\chi,w_a$ require calibration, either by elicitation (swing weighting, pairwise comparison) or by derivation from a decision-theoretic principle. Second, the \emph{dependency graph} $D(T)$ requires a substantive account of what it means for one thesis to presuppose another; the mathematics is independent of that account, but the values of $a(T)$ are not. Third, the \emph{consistency score} $\chi(T)$ requires a choice between classical bivalence and a graded or paraconsistent semantics. These are genuine open problems, but they are now localized: they concern the inputs, not the aggregation rule.
 
@@ -260,20 +287,30 @@ The original remark about ``lazily generated cutting planes'' conflated the LP r
 
 \section{Conclusion}\label{sec:concl}
 
-We have reconstructed the macro-philosophical index as a weighted geometric mean characterized by five non-circular axioms, with a coherence component defined on the cyclic core of the dependency graph and proved invariant under cycle-irrelevant extensions and transitively redundant edges. Consistency and coherence are explicit separate coordinates, and the only free parameters are the weights. The result is a measurement-theoretic framework in which the aggregation rule is a theorem and the coherence measure has proved invariance properties. The remaining work is calibration of the weights and justification of the dependency graph and consistency score; these are substantive modeling problems, not defects of the formalism.
+We have reconstructed the macro-philosophical index as a weighted geometric mean characterized by five independent non-circular axioms, with a coherence component defined on the cyclic core of the dependency graph and proved invariant under cycle-irrelevant extensions and cycle-neutral edge additions. Consistency and coherence are explicit separate coordinates, and the only free parameters are the weights. The result is a measurement-theoretic framework in which the aggregation rule is a theorem and the coherence measure has proved invariance properties. The remaining work is calibration of the weights and justification of the dependency graph and consistency score; these are substantive modeling problems, not defects of the formalism.
 
 \begin{thebibliography}{99}
+
+\bibitem{Aczel1966}
+J.~Acz\'el,
+\emph{Lectures on Functional Equations and Their Applications},
+Academic Press, New York, 1966.
+
+\bibitem{Eichhorn1978}
+W.~Eichhorn,
+\emph{Functional Equations in Economics},
+Addison-Wesley, Reading, MA, 1978.
+
+\bibitem{Fishburn1970}
+P.~C. Fishburn,
+\emph{Utility Theory for Decision Making},
+Wiley, New York, 1970.
 
 \bibitem{Karp1972}
 R.~M. Karp,
 \emph{Reducibility among combinatorial problems},
 in: Complexity of Computer Computations (R.~E. Miller and J.~W. Thatcher, eds.),
 Plenum Press, New York, 1972, pp.~85--103.
-
-\bibitem{Aczel1966}
-J.~Acz\'el,
-\emph{Lectures on Functional Equations and Their Applications},
-Academic Press, New York, 1966.
 
 \bibitem{KLST1971}
 D.~H. Krantz, R.~D. Luce, P.~Suppes, and A.~Tversky,
